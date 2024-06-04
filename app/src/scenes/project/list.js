@@ -35,15 +35,14 @@ const ProjectList = () => {
 
   return (
     <div className="w-full p-2 md:!px-8">
-      <Create onChangeSearch={handleSearch} />
+      <Create setProjects={setProjects} onChangeSearch={handleSearch} />
       <div className="py-3">
         {activeProjects.map((hit) => {
           return (
             <div
               key={hit._id}
               onClick={() => history.push(`/project/${hit._id}`)}
-              className="flex justify-between flex-wrap p-3 border border-[#FFFFFF] bg-[#F9FBFD] rounded-[16px] mt-3 cursor-pointer"
-            >
+              className="flex justify-between flex-wrap p-3 border border-[#FFFFFF] bg-[#F9FBFD] rounded-[16px] mt-3 cursor-pointer">
               <div className="flex w-full md:w-[25%] border-r border-[#E5EAEF]">
                 <div className="flex flex-wrap gap-4 items-center">
                   {hit.logo && <img className="w-[85px] h-[85px] rounded-[8px] object-contain	" src={hit.logo} alt="ProjectImage.png" />}
@@ -93,7 +92,7 @@ const Budget = ({ project }) => {
   return <ProgressBar percentage={width} max={budget_max_monthly} value={total} />;
 };
 
-const Create = ({ onChangeSearch }) => {
+const Create = ({ onChangeSearch, setProjects }) => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -121,8 +120,7 @@ const Create = ({ onChangeSearch }) => {
           className="bg-[#0560FD] text-[#fff] py-[12px] px-[20px] rounded-[10px] text-[16px] font-medium"
           onClick={() => {
             setOpen(true);
-          }}
-        >
+          }}>
           Create new project
         </button>
       </div>
@@ -132,14 +130,12 @@ const Create = ({ onChangeSearch }) => {
           className=" absolute top-0 bottom-0 left-0 right-0 bg-[#00000066] flex justify-center p-[1rem] z-50 "
           onClick={() => {
             setOpen(false);
-          }}
-        >
+          }}>
           <div
             className="w-full md:w-[60%] max-h-[200px] bg-[white] p-[25px] rounded-md"
             onClick={(e) => {
               e.stopPropagation();
-            }}
-          >
+            }}>
             {/* Modal Body */}
             <Formik
               initialValues={{}}
@@ -150,13 +146,13 @@ const Create = ({ onChangeSearch }) => {
                   if (!res.ok) throw res;
                   toast.success("Created!");
                   setOpen(false);
+                  setProjects((prev) => [res.data, ...prev]);
                 } catch (e) {
                   console.log(e);
                   toast.error("Some Error!", e.code);
                 }
                 setSubmitting(false);
-              }}
-            >
+              }}>
               {({ values, handleChange, handleSubmit, isSubmitting }) => (
                 <React.Fragment>
                   <div className="w-full md:w-6/12 text-left">
@@ -167,8 +163,7 @@ const Create = ({ onChangeSearch }) => {
                     <LoadingButton
                       className="mt-[1rem] bg-[#0560FD] text-[16px] font-medium text-[#FFFFFF] py-[12px] px-[22px] rounded-[10px]"
                       loading={isSubmitting}
-                      onClick={handleSubmit}
-                    >
+                      onClick={handleSubmit}>
                       Create
                     </LoadingButton>
                   </div>
