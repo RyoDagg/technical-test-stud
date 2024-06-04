@@ -41,7 +41,16 @@ const Detail = ({ user }) => {
 
   return (
     <Formik
-      initialValues={user}
+      initialValues={{
+        name: user.name || "",
+        email: user.email || "",
+        status: user.status || "",
+        job_title: user.job_title || "",
+        days_worked: user.days_worked || "",
+        costPerDay: user.costPerDay || "",
+        sellPerDay: user.sellPerDay || "",
+        description: user.description || "",
+      }}
       onSubmit={async (values) => {
         try {
           await api.put(`/user/${user._id}`, values);
